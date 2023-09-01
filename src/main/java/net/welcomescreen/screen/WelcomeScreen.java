@@ -43,9 +43,14 @@ public class WelcomeScreen extends Screen {
         int closeButtonX = (int) this.closeList.get(1);
         int closeButtonY = (int) this.closeList.get(2);
         boolean closeButtonCentered = (boolean) this.closeList.get(3);
+        boolean closeButtonObjectCentered = (boolean) this.closeList.get(4);
         if (closeButtonCentered) {
-            closeButtonX = this.width / 2 - 30 + closeButtonX;
-            closeButtonY = this.height / 2 - 10 + closeButtonY;
+            closeButtonX = this.width / 2 + closeButtonX;
+            closeButtonY = this.height / 2 + closeButtonY;
+        }
+        if (closeButtonObjectCentered) {
+            closeButtonX = closeButtonX - 30;
+            closeButtonY = closeButtonY - 10;
         }
         this.addDrawableChild(ButtonWidget.builder(Text.translatable((String) this.closeList.get(0)), button -> {
             this.close();
@@ -59,9 +64,15 @@ public class WelcomeScreen extends Screen {
                 int buttonSizeX = (int) this.buttonList.get(i).get(2);
                 int buttonSizeY = (int) this.buttonList.get(i).get(3);
                 boolean buttonCentered = (boolean) this.buttonList.get(i).get(6);
+                boolean buttonObjectCentered = (boolean) this.buttonList.get(i).get(7);
+
                 if (buttonCentered) {
-                    buttonX = this.width / 2 - buttonSizeX / 2 + buttonX;
-                    buttonY = this.height / 2 - buttonSizeY / 2 + buttonY;
+                    buttonX = this.width / 2 + buttonX;
+                    buttonY = this.height / 2 + buttonY;
+                }
+                if (buttonObjectCentered) {
+                    buttonX = buttonX - buttonSizeX / 2;
+                    buttonY = buttonY - buttonSizeY / 2;
                 }
                 String link = (String) this.buttonList.get(i).get(5);
                 this.addDrawableChild(ButtonWidget.builder(Text.translatable((String) this.buttonList.get(i).get(4)), button -> {
@@ -86,12 +97,13 @@ public class WelcomeScreen extends Screen {
         int titleX = (int) this.titleList.get(1);
         int titleY = (int) this.titleList.get(2);
         boolean titleCentered = (boolean) this.titleList.get(3);
+        boolean titleObjectCentered = (boolean) this.titleList.get(4);
         if (titleCentered) {
-            titleX = this.width / 2;
+            titleX = this.width / 2 + titleX;
         }
         context.getMatrices().translate(titleX, 0, 0.0f);
         context.getMatrices().scale(2.0f, 2.0f, 2.0f);
-        context.drawText(textRenderer, this.title, (int) this.titleList.get(1) + (titleCentered ? -this.textRenderer.getWidth(this.title) / 2 : 0), titleY, 0xFFFFFF, true);
+        context.drawText(textRenderer, this.title, (int) this.titleList.get(1) + (titleObjectCentered ? -this.textRenderer.getWidth(this.title) / 2 : 0), titleY, 0xFFFFFF, true);
         context.getMatrices().pop();
 
         for (int i = 0; i < this.imageList.size(); i++) {
@@ -100,9 +112,14 @@ public class WelcomeScreen extends Screen {
             int imageSizeX = (int) this.imageList.get(i).get(2);
             int imageSizeY = (int) this.imageList.get(i).get(3);
             boolean centered = (boolean) this.imageList.get(i).get(5);
+            boolean objectCentered = (boolean) this.imageList.get(i).get(6);
             if (centered) {
-                imageX = this.width / 2 - imageSizeX / 2 + imageX;
-                imageY = this.height / 2 - imageSizeY / 2 + imageY;
+                imageX = this.width / 2 + imageX;
+                imageY = this.height / 2 + imageY;
+            }
+            if (objectCentered) {
+                imageX = imageX - imageSizeX / 2;
+                imageY = imageY - imageSizeY / 2;
             }
             context.drawTexture((Identifier) this.imageList.get(i).get(4), imageX, imageY, 0, 0, imageSizeX, imageSizeY, 256, 256);
         }
@@ -111,14 +128,15 @@ public class WelcomeScreen extends Screen {
             int textX = (int) this.textList.get(i).get(0);
             int textY = (int) this.textList.get(i).get(1);
             boolean centered = (boolean) this.textList.get(i).get(2);
+            boolean objectCentered = (boolean) this.textList.get(i).get(3);
             if (centered) {
                 textX = this.width / 2 + textX;
                 textY = this.height / 2 + textY;
             }
             int line = 0;
-            for (int u = 3; u < this.textList.get(i).size(); u++) {
-                context.drawText(textRenderer, (String) this.textList.get(i).get(u), textX + (centered ? -this.textRenderer.getWidth((String) this.textList.get(i).get(u)) / 2 : 0), textY + line * 12,
-                        0xFFFFFF, false);
+            for (int u = 4; u < this.textList.get(i).size(); u++) {
+                context.drawText(textRenderer, (String) this.textList.get(i).get(u), textX + (objectCentered ? -this.textRenderer.getWidth((String) this.textList.get(i).get(u)) / 2 : 0),
+                        textY + line * 12, 0xFFFFFF, false);
                 line++;
             }
         }
@@ -140,12 +158,17 @@ public class WelcomeScreen extends Screen {
             backgroundWidth = (int) backgroundList.get(1);
             backgroundHeight = (int) backgroundList.get(2);
             boolean centered = (boolean) backgroundList.get(3);
+            boolean objectCentered = (boolean) backgroundList.get(3);
             backgroundTextureWidth = 256;
             backgroundTextureHeight = 256;
 
             if (centered) {
-                backgroundX = this.width / 2 - backgroundWidth / 2;
-                backgroundY = this.height / 2 - backgroundHeight / 2;
+                backgroundX = this.width / 2;
+                backgroundY = this.height / 2;
+            }
+            if (objectCentered) {
+                backgroundX = backgroundX - backgroundWidth / 2;
+                backgroundY = backgroundY - backgroundHeight / 2;
             }
 
             context.drawTexture((Identifier) backgroundList.get(0), backgroundX, backgroundY, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth, backgroundTextureHeight);

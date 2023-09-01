@@ -20,17 +20,20 @@ public class WelcomeClientPacket {
             titleList.add((int) buf.readInt());
             titleList.add((int) buf.readInt());
             titleList.add((boolean) buf.readBoolean());
+            titleList.add((boolean) buf.readBoolean());
 
             List<Object> closeList = new ArrayList<Object>();
             closeList.add((String) buf.readString());
             closeList.add((int) buf.readInt());
             closeList.add((int) buf.readInt());
             closeList.add((boolean) buf.readBoolean());
+            closeList.add((boolean) buf.readBoolean());
 
             List<Object> backgroundList = new ArrayList<Object>();
             backgroundList.add((Identifier) buf.readIdentifier());
             backgroundList.add((int) buf.readInt());
             backgroundList.add((int) buf.readInt());
+            backgroundList.add((boolean) buf.readBoolean());
             backgroundList.add((boolean) buf.readBoolean());
 
             List<List<Object>> textList = new ArrayList<List<Object>>();
@@ -44,6 +47,7 @@ public class WelcomeClientPacket {
                 texts.add((int) buf.readInt());
                 texts.add((int) buf.readInt());
                 // Center
+                texts.add((boolean) buf.readBoolean());
                 texts.add((boolean) buf.readBoolean());
                 // Text
                 int textSize = buf.readInt();
@@ -66,6 +70,7 @@ public class WelcomeClientPacket {
                 images.add((Identifier) buf.readIdentifier());
                 // Center
                 images.add((boolean) buf.readBoolean());
+                images.add((boolean) buf.readBoolean());
 
                 imageList.add(images);
             }
@@ -84,6 +89,7 @@ public class WelcomeClientPacket {
                 // Link
                 buttons.add((String) buf.readString());
                 // Center
+                buttons.add((boolean) buf.readBoolean());
                 buttons.add((boolean) buf.readBoolean());
 
                 buttonList.add(buttons);

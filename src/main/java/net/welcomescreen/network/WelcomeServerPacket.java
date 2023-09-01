@@ -24,6 +24,7 @@ public class WelcomeServerPacket {
         buf.writeInt((int) WelcomeScreenData.TITLE_LIST.get(2));
         // Center
         buf.writeBoolean((boolean) WelcomeScreenData.TITLE_LIST.get(3));
+        buf.writeBoolean((boolean) WelcomeScreenData.TITLE_LIST.get(4));
 
         // Text
         buf.writeString((String) WelcomeScreenData.CLOSE_LIST.get(0));
@@ -32,6 +33,7 @@ public class WelcomeServerPacket {
         buf.writeInt((int) WelcomeScreenData.CLOSE_LIST.get(2));
         // Center
         buf.writeBoolean((boolean) WelcomeScreenData.CLOSE_LIST.get(3));
+        buf.writeBoolean((boolean) WelcomeScreenData.CLOSE_LIST.get(4));
 
         if (!WelcomeScreenData.BACKGROUND_LIST.isEmpty()) {
             // ID
@@ -41,10 +43,12 @@ public class WelcomeServerPacket {
             buf.writeInt((int) WelcomeScreenData.BACKGROUND_LIST.get(2));
             // Center
             buf.writeBoolean((boolean) WelcomeScreenData.BACKGROUND_LIST.get(3));
+            buf.writeBoolean((boolean) WelcomeScreenData.BACKGROUND_LIST.get(4));
         } else {
             buf.writeIdentifier(new Identifier("textures/gui/options_background.png"));
             buf.writeInt(0);
             buf.writeInt(0);
+            buf.writeBoolean(false);
             buf.writeBoolean(false);
         }
 
@@ -55,9 +59,10 @@ public class WelcomeServerPacket {
             buf.writeInt((int) WelcomeScreenData.TEXT_LIST.get(i).get(1));
             // Center
             buf.writeBoolean((boolean) WelcomeScreenData.TEXT_LIST.get(i).get(2));
+            buf.writeBoolean((boolean) WelcomeScreenData.TEXT_LIST.get(i).get(3));
             // Text
-            buf.writeInt(WelcomeScreenData.TEXT_LIST.get(i).size() - 3);
-            for (int u = 3; u < WelcomeScreenData.TEXT_LIST.get(i).size(); u++) {
+            buf.writeInt(WelcomeScreenData.TEXT_LIST.get(i).size() - 4);
+            for (int u = 4; u < WelcomeScreenData.TEXT_LIST.get(i).size(); u++) {
                 buf.writeString((String) WelcomeScreenData.TEXT_LIST.get(i).get(u));
             }
         }
@@ -74,6 +79,7 @@ public class WelcomeServerPacket {
             buf.writeIdentifier((Identifier) WelcomeScreenData.IMAGE_LIST.get(i).get(4));
             // Center
             buf.writeBoolean((boolean) WelcomeScreenData.IMAGE_LIST.get(i).get(5));
+            buf.writeBoolean((boolean) WelcomeScreenData.IMAGE_LIST.get(i).get(6));
         }
 
         buf.writeInt(WelcomeScreenData.BUTTON_LIST.size());
@@ -90,6 +96,7 @@ public class WelcomeServerPacket {
             buf.writeString((String) WelcomeScreenData.BUTTON_LIST.get(i).get(5));
             // Center
             buf.writeBoolean((boolean) WelcomeScreenData.BUTTON_LIST.get(i).get(6));
+            buf.writeBoolean((boolean) WelcomeScreenData.BUTTON_LIST.get(i).get(7));
         }
 
         CustomPayloadS2CPacket packet = new CustomPayloadS2CPacket(WELCOME_SCREEN, buf);
