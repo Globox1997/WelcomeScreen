@@ -23,6 +23,7 @@ A full example can be found below:
 {
     "title": {
         "center": true,
+        "object_center": true,
         "pos": [
             0,
             8
@@ -31,6 +32,7 @@ A full example can be found below:
     },
     "close": {
         "center": true,
+        "object_center": true,
         "pos": [
             0,
             50
@@ -39,6 +41,7 @@ A full example can be found below:
     },
     "text_1": {
         "center": true,
+        "object_center": true,
         "pos": [
             0,
             -40
@@ -52,6 +55,7 @@ A full example can be found below:
     },
     "image_1": {
         "center": true,
+        "object_center": true,
         "pos": [
             60,
             0
@@ -64,6 +68,7 @@ A full example can be found below:
     },
     "button_1": {
         "center": true,
+        "object_center": true,
         "pos": [
             0,
             10
@@ -80,6 +85,7 @@ A full example can be found below:
     ],
     "background": {
         "center": false,
+        "object_center": true,
         "id": "textures/gui/options_background.png",
         "size": [
             0,
