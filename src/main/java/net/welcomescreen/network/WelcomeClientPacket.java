@@ -30,7 +30,11 @@ public class WelcomeClientPacket {
             closeList.add((boolean) buf.readBoolean());
 
             List<Object> backgroundList = new ArrayList<Object>();
-            backgroundList.add((Identifier) buf.readIdentifier());
+            Identifier identifier = buf.readIdentifier();
+            if (identifier.getPath().equals("")) {
+                identifier = null;
+            }
+            backgroundList.add(identifier);
             backgroundList.add((int) buf.readInt());
             backgroundList.add((int) buf.readInt());
             backgroundList.add((boolean) buf.readBoolean());

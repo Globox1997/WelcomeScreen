@@ -145,43 +145,45 @@ public class WelcomeScreen extends Screen {
     }
 
     private void renderBackgroundWelcomeTexture(DrawContext context) {
-        context.setShaderColor(0.25f, 0.25f, 0.25f, 1.0f);
+        if (backgroundList.get(0) != null) {
+            context.setShaderColor(0.25f, 0.25f, 0.25f, 1.0f);
 
-        int backgroundX = 0;
-        int backgroundY = 0;
-        int backgroundTextureWidth = 16;
-        int backgroundTextureHeight = 16;
-        int backgroundWidth = this.width;
-        int backgroundHeight = this.height;
+            int backgroundX = 0;
+            int backgroundY = 0;
+            int backgroundTextureWidth = 16;
+            int backgroundTextureHeight = 16;
+            int backgroundWidth = this.width;
+            int backgroundHeight = this.height;
 
-        if ((int) backgroundList.get(1) != 0) {
-            backgroundWidth = (int) backgroundList.get(1);
-            backgroundHeight = (int) backgroundList.get(2);
-            boolean centered = (boolean) backgroundList.get(3);
-            boolean objectCentered = (boolean) backgroundList.get(3);
-            backgroundTextureWidth = 256;
-            backgroundTextureHeight = 256;
+            if ((int) backgroundList.get(1) != 0) {
+                backgroundWidth = (int) backgroundList.get(1);
+                backgroundHeight = (int) backgroundList.get(2);
+                boolean centered = (boolean) backgroundList.get(3);
+                boolean objectCentered = (boolean) backgroundList.get(3);
+                backgroundTextureWidth = 256;
+                backgroundTextureHeight = 256;
 
-            if (centered) {
-                backgroundX = this.width / 2;
-                backgroundY = this.height / 2;
-            }
-            if (objectCentered) {
-                backgroundX = backgroundX - backgroundWidth / 2;
-                backgroundY = backgroundY - backgroundHeight / 2;
-            }
+                if (centered) {
+                    backgroundX = this.width / 2;
+                    backgroundY = this.height / 2;
+                }
+                if (objectCentered) {
+                    backgroundX = backgroundX - backgroundWidth / 2;
+                    backgroundY = backgroundY - backgroundHeight / 2;
+                }
 
-            context.drawTexture((Identifier) backgroundList.get(0), backgroundX, backgroundY, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth, backgroundTextureHeight);
-        } else {
-            for (int m = 0; m < this.width / 16; ++m) {
-                for (int n = 0; n < this.height / 16; ++n) {
-                    context.drawTexture((Identifier) backgroundList.get(0), backgroundX + 16 * m, backgroundY + 16 * n, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth,
-                            backgroundTextureHeight);
+                context.drawTexture((Identifier) backgroundList.get(0), backgroundX, backgroundY, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth, backgroundTextureHeight);
+            } else {
+                for (int m = 0; m < this.width / 16; ++m) {
+                    for (int n = 0; n < this.height / 16; ++n) {
+                        context.drawTexture((Identifier) backgroundList.get(0), backgroundX + 16 * m, backgroundY + 16 * n, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth,
+                                backgroundTextureHeight);
+                    }
                 }
             }
-        }
 
-        context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+            context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
+        }
     }
 
 }
