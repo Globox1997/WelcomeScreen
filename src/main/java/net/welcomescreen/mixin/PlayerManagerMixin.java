@@ -43,8 +43,7 @@ public class PlayerManagerMixin {
             WelcomeServerPacket.writeS2CWelcomeScreenPacket(serverPlayNetworkHandler);
 
             if (!WelcomeScreenData.COMMAND_LIST.isEmpty()) {
-                if (nbtCompound != null && WelcomeScreenMain.CONFIG.alwaysShowWelcomeScreen) {
-                } else {
+                if (nbtCompound == null) {
                     for (int i = 0; i < WelcomeScreenData.COMMAND_LIST.size(); i++) {
                         runCommand(server, player, WelcomeScreenData.COMMAND_LIST.get(i));
                     }
