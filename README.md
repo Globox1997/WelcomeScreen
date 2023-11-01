@@ -64,7 +64,7 @@ A full example can be found below:
             28,
             29
         ],
-        "id": "textures/gui/advancements/tabs.png"
+        "id": "minecraft:textures/gui/advancements/tabs.png"
     },
     "button_1": {
         "center": true,
@@ -86,7 +86,7 @@ A full example can be found below:
     "background": {
         "center": false,
         "object_center": true,
-        "id": "textures/gui/options_background.png",
+        "id": "minecraft:textures/gui/options_background.png",
         "size": [
             0,
             0
