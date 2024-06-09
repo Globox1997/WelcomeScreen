@@ -7,100 +7,103 @@ import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.minecraft.util.Identifier;
+import net.welcomescreen.network.packet.WelcomeScreenPacket;
 import net.welcomescreen.screen.WelcomeScreen;
 
 @Environment(EnvType.CLIENT)
 public class WelcomeClientPacket {
 
     public static void init() {
-        ClientPlayNetworking.registerGlobalReceiver(WelcomeServerPacket.WELCOME_SCREEN, (client, handler, buf, sender) -> {
+        ClientPlayNetworking.registerGlobalReceiver(WelcomeScreenPacket.PACKET_ID, (payload, context) -> {
 
             List<Object> titleList = new ArrayList<Object>();
-            titleList.add((String) buf.readString());
-            titleList.add((int) buf.readInt());
-            titleList.add((int) buf.readInt());
-            titleList.add((boolean) buf.readBoolean());
-            titleList.add((boolean) buf.readBoolean());
+            titleList.add(payload.screenData().titleText());
+            titleList.add(payload.screenData().titleX());
+            titleList.add(payload.screenData().titleY());
+            titleList.add(payload.screenData().titleCenter());
+            titleList.add(payload.screenData().titleObjectCenter());
 
             List<Object> closeList = new ArrayList<Object>();
-            closeList.add((String) buf.readString());
-            closeList.add((int) buf.readInt());
-            closeList.add((int) buf.readInt());
-            closeList.add((boolean) buf.readBoolean());
-            closeList.add((boolean) buf.readBoolean());
+            closeList.add(payload.screenData().closeText());
+            closeList.add(payload.screenData().closeX());
+            closeList.add(payload.screenData().closeY());
+            closeList.add(payload.screenData().closeCenter());
+            closeList.add(payload.screenData().closeObjectCenter());
 
             List<Object> backgroundList = new ArrayList<Object>();
-            Identifier identifier = buf.readIdentifier();
+            Identifier identifier = payload.screenData().backgroundIdentifier();
             if (identifier.getPath().equals("")) {
                 identifier = null;
             }
             backgroundList.add(identifier);
-            backgroundList.add((int) buf.readInt());
-            backgroundList.add((int) buf.readInt());
-            backgroundList.add((boolean) buf.readBoolean());
-            backgroundList.add((boolean) buf.readBoolean());
+            backgroundList.add(payload.screenData().backgroundX());
+            backgroundList.add(payload.screenData().backgroundY());
+            backgroundList.add(payload.screenData().backgroundCenter());
+            backgroundList.add(payload.screenData().backgroundObjectCenter());
 
             List<List<Object>> textList = new ArrayList<List<Object>>();
             List<List<Object>> imageList = new ArrayList<List<Object>>();
             List<List<Object>> buttonList = new ArrayList<List<Object>>();
 
-            int textListSize = buf.readInt();
+            int textListSize = payload.textData().textListSize();
+            int stringListCount = 0;
             for (int i = 0; i < textListSize; i++) {
                 List<Object> texts = new ArrayList<Object>();
                 // Pos
-                texts.add((int) buf.readInt());
-                texts.add((int) buf.readInt());
+                texts.add(payload.textData().textPosXList().get(i));
+                texts.add(payload.textData().textPosYList().get(i));
                 // Center
-                texts.add((boolean) buf.readBoolean());
-                texts.add((boolean) buf.readBoolean());
+                texts.add(payload.textData().textCenterList().get(i));
+                texts.add(payload.textData().textObjectCenterList().get(i));
                 // Text
-                int textSize = buf.readInt();
+                int textSize = payload.textData().textStringSizeList().get(i);
                 for (int u = 0; u < textSize; u++) {
-                    texts.add((String) buf.readString());
+                    texts.add(payload.textData().textStringList().get(stringListCount));
+                    stringListCount++;
                 }
                 textList.add(texts);
             }
 
-            int imageListSize = buf.readInt();
+            int imageListSize = payload.imageData().imageListSize();
             for (int i = 0; i < imageListSize; i++) {
                 List<Object> images = new ArrayList<Object>();
                 // Pos
-                images.add((int) buf.readInt());
-                images.add((int) buf.readInt());
+                images.add(payload.imageData().imagePosXList().get(i));
+                images.add(payload.imageData().imagePosYList().get(i));
                 // Size
-                images.add((int) buf.readInt());
-                images.add((int) buf.readInt());
+                images.add(payload.imageData().imageSizeXList().get(i));
+                images.add(payload.imageData().imageSizeYList().get(i));
                 // ID
-                images.add((Identifier) buf.readIdentifier());
+                images.add(payload.imageData().imageIdentifierList().get(i));
                 // Center
-                images.add((boolean) buf.readBoolean());
-                images.add((boolean) buf.readBoolean());
+                images.add(payload.imageData().imageCenterList().get(i));
+                images.add(payload.imageData().imageObjectCenterList().get(i));
 
                 imageList.add(images);
             }
 
-            int buttonListSize = buf.readInt();
+            int buttonListSize = payload.buttonData().buttonListSize();
             for (int i = 0; i < buttonListSize; i++) {
                 List<Object> buttons = new ArrayList<Object>();
                 // Pos
-                buttons.add((int) buf.readInt());
-                buttons.add((int) buf.readInt());
+                buttons.add(payload.buttonData().buttonPosXList().get(i));
+                buttons.add(payload.buttonData().buttonPosYList().get(i));
                 // Size
-                buttons.add((int) buf.readInt());
-                buttons.add((int) buf.readInt());
+                buttons.add(payload.buttonData().buttonSizeXList().get(i));
+                buttons.add(payload.buttonData().buttonSizeYList().get(i));
                 // Text
-                buttons.add((String) buf.readString());
+                buttons.add(payload.buttonData().buttonStringList().get(i));
                 // Link
-                buttons.add((String) buf.readString());
+                buttons.add(payload.buttonData().buttonLinkList().get(i));
                 // Center
-                buttons.add((boolean) buf.readBoolean());
-                buttons.add((boolean) buf.readBoolean());
+                buttons.add(payload.buttonData().buttonCenterList().get(i));
+                buttons.add(payload.buttonData().buttonObjectCenterList().get(i));
 
                 buttonList.add(buttons);
             }
 
-            client.execute(() -> {
-                client.setScreen(new WelcomeScreen(titleList, closeList, backgroundList, textList, imageList, buttonList));
+            context.client().execute(() -> {
+                context.client().setScreen(new WelcomeScreen(titleList, closeList, backgroundList, textList, imageList, buttonList));
             });
         });
     }

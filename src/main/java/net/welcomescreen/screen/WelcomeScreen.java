@@ -89,7 +89,6 @@ public class WelcomeScreen extends Screen {
 
     @Override
     public void render(DrawContext context, int mouseX, int mouseY, float delta) {
-        this.renderBackground(context);
         this.renderBackgroundWelcomeTexture(context);
 
         context.getMatrices().push();
@@ -142,6 +141,10 @@ public class WelcomeScreen extends Screen {
         }
 
         super.render(context, mouseX, mouseY, delta);
+    }
+
+    @Override
+    public void renderBackground(DrawContext context, int mouseX, int mouseY, float delta) {
     }
 
     private void renderBackgroundWelcomeTexture(DrawContext context) {

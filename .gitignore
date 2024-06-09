@@ -42,3 +42,4 @@ replay_*.log
 # other
 
 src/main/resources/data/welcomescreen/welcomescreen/
+src/main/resources/assets/welcomescreen/textures/

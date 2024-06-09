@@ -3,4 +3,4 @@
 ### Fixed:
 - 
 ### Changed:
-- Removed default screen
+- Updated to mc 1.20.6
