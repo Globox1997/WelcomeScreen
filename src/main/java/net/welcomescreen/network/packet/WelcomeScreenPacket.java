@@ -12,7 +12,7 @@ public record WelcomeScreenPacket(ScreenData screenData, TextData textData, Imag
 
     public static final PacketCodec<PacketByteBuf, WelcomeScreenPacket> PACKET_CODEC = CustomPayload.codecOf(WelcomeScreenPacket::write, WelcomeScreenPacket::new);
 
-    public static final CustomPayload.Id<WelcomeScreenPacket> PACKET_ID = new CustomPayload.Id<>(new Identifier("welcomescreen", "welcomescreen_packet"));
+    public static final CustomPayload.Id<WelcomeScreenPacket> PACKET_ID = new CustomPayload.Id<>(Identifier.of("welcomescreen", "welcomescreen_packet"));
 
     private WelcomeScreenPacket(PacketByteBuf buf) {
         this(new ScreenData(buf), new TextData(buf), new ImageData(buf), new ButtonData(buf));

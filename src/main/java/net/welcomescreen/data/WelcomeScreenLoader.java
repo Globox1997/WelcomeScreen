@@ -23,7 +23,7 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
 
     @Override
     public Identifier getFabricId() {
-        return new Identifier("welcomescreen", "welcomescreen_loader");
+        return Identifier.of("welcomescreen", "welcomescreen_loader");
     }
 
     @Override
@@ -51,7 +51,7 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
 
                 if (data.has("background")) {
                     JsonObject jsonObject = data.get("background").getAsJsonObject();
-                    WelcomeScreenData.BACKGROUND_LIST.add(new Identifier(jsonObject.get("id").getAsString()));
+                    WelcomeScreenData.BACKGROUND_LIST.add(Identifier.of(jsonObject.get("id").getAsString()));
                     if (jsonObject.has("size")) {
                         WelcomeScreenData.BACKGROUND_LIST.add((int) jsonObject.get("size").getAsJsonArray().get(0).getAsInt());
                         WelcomeScreenData.BACKGROUND_LIST.add((int) jsonObject.get("size").getAsJsonArray().get(1).getAsInt());
@@ -95,7 +95,7 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
                         list.add(jsonSizeArray.get(0).getAsInt());
                         list.add(jsonSizeArray.get(1).getAsInt());
 
-                        list.add(new Identifier(jsonObject.get("id").getAsString()));
+                        list.add(Identifier.of(jsonObject.get("id").getAsString()));
 
                         list.add(jsonObject.get("center").getAsBoolean());
                         list.add(jsonObject.get("object_center").getAsBoolean());

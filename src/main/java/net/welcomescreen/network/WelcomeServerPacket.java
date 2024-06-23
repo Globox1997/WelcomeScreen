@@ -22,7 +22,7 @@ public class WelcomeServerPacket {
 
     public static void writeS2CWelcomeScreenPacket(ServerPlayerEntity serverPlayerEntity) {
 
-        Identifier backgroundIdentifier = new Identifier("textures/gui/options_background.png");
+        Identifier backgroundIdentifier = Identifier.of("textures/gui/options_background.png");
         int backgroundX = 0;
         int backgroundY = 0;
         boolean backgroundCenter = false;
