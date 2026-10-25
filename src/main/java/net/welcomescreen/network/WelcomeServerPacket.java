@@ -22,7 +22,7 @@ public class WelcomeServerPacket {
 
     public static void writeS2CWelcomeScreenPacket(ServerPlayerEntity serverPlayerEntity) {
 
-        Identifier backgroundIdentifier = Identifier.of("textures/gui/options_background.png");
+        Identifier backgroundIdentifier = Identifier.ofVanilla("textures/block/dirt.png");
         int backgroundX = 0;
         int backgroundY = 0;
         boolean backgroundCenter = false;
@@ -76,7 +76,7 @@ public class WelcomeServerPacket {
         List<Boolean> imageCenterList = new ArrayList<Boolean>();
         List<Boolean> imageObjectCenterList = new ArrayList<Boolean>();
 
-        for (int i = 0; i < WelcomeScreenData.BUTTON_LIST.size(); i++) {
+        for (int i = 0; i < WelcomeScreenData.IMAGE_LIST.size(); i++) {
             // Pos
             imagePosXList.add((int) WelcomeScreenData.IMAGE_LIST.get(i).get(0));
             imagePosYList.add((int) WelcomeScreenData.IMAGE_LIST.get(i).get(1));

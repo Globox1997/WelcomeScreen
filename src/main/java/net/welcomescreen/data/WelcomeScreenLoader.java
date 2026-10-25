@@ -1,6 +1,5 @@
 package net.welcomescreen.data;
 
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
@@ -28,39 +27,45 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
 
     @Override
     public void reload(ResourceManager resourceManager) {
+        WelcomeScreenData.clearData();
         resourceManager.findResources("welcomescreen", id -> id.getPath().endsWith(".json")).forEach((id, resourceRef) -> {
-            try {
-                InputStream stream = resourceRef.getInputStream();
-                JsonObject data = JsonParser.parseReader(new InputStreamReader(stream)).getAsJsonObject();
+            try (InputStreamReader reader = new InputStreamReader(resourceRef.getInputStream())) {
+                JsonObject data = JsonParser.parseReader(reader).getAsJsonObject();
 
-                WelcomeScreenData.clearData();
+                List<Object> titleList = new ArrayList<Object>();
+                List<Object> closeList = new ArrayList<Object>();
+                List<Object> backgroundList = new ArrayList<Object>();
+                List<List<Object>> textList = new ArrayList<List<Object>>();
+                List<List<Object>> imageList = new ArrayList<List<Object>>();
+                List<List<Object>> buttonList = new ArrayList<List<Object>>();
+                List<String> commandList = new ArrayList<String>();
 
                 JsonObject jsonTitleObject = data.get("title").getAsJsonObject();
-                WelcomeScreenData.TITLE_LIST.add((String) jsonTitleObject.get("text").getAsString());
-                WelcomeScreenData.TITLE_LIST.add((int) jsonTitleObject.get("pos").getAsJsonArray().get(0).getAsInt());
-                WelcomeScreenData.TITLE_LIST.add((int) jsonTitleObject.get("pos").getAsJsonArray().get(1).getAsInt());
-                WelcomeScreenData.TITLE_LIST.add((boolean) jsonTitleObject.get("center").getAsBoolean());
-                WelcomeScreenData.TITLE_LIST.add((boolean) jsonTitleObject.get("object_center").getAsBoolean());
+                titleList.add((String) jsonTitleObject.get("text").getAsString());
+                titleList.add((int) jsonTitleObject.get("pos").getAsJsonArray().get(0).getAsInt());
+                titleList.add((int) jsonTitleObject.get("pos").getAsJsonArray().get(1).getAsInt());
+                titleList.add((boolean) jsonTitleObject.get("center").getAsBoolean());
+                titleList.add((boolean) jsonTitleObject.get("object_center").getAsBoolean());
 
                 JsonObject jsonCloseObject = data.get("close").getAsJsonObject();
-                WelcomeScreenData.CLOSE_LIST.add((String) jsonCloseObject.get("text").getAsString());
-                WelcomeScreenData.CLOSE_LIST.add((int) jsonCloseObject.get("pos").getAsJsonArray().get(0).getAsInt());
-                WelcomeScreenData.CLOSE_LIST.add((int) jsonCloseObject.get("pos").getAsJsonArray().get(1).getAsInt());
-                WelcomeScreenData.CLOSE_LIST.add((boolean) jsonCloseObject.get("center").getAsBoolean());
-                WelcomeScreenData.CLOSE_LIST.add((boolean) jsonCloseObject.get("object_center").getAsBoolean());
+                closeList.add((String) jsonCloseObject.get("text").getAsString());
+                closeList.add((int) jsonCloseObject.get("pos").getAsJsonArray().get(0).getAsInt());
+                closeList.add((int) jsonCloseObject.get("pos").getAsJsonArray().get(1).getAsInt());
+                closeList.add((boolean) jsonCloseObject.get("center").getAsBoolean());
+                closeList.add((boolean) jsonCloseObject.get("object_center").getAsBoolean());
 
                 if (data.has("background")) {
                     JsonObject jsonObject = data.get("background").getAsJsonObject();
-                    WelcomeScreenData.BACKGROUND_LIST.add(Identifier.of(jsonObject.get("id").getAsString()));
+                    backgroundList.add(Identifier.of(jsonObject.get("id").getAsString()));
                     if (jsonObject.has("size")) {
-                        WelcomeScreenData.BACKGROUND_LIST.add((int) jsonObject.get("size").getAsJsonArray().get(0).getAsInt());
-                        WelcomeScreenData.BACKGROUND_LIST.add((int) jsonObject.get("size").getAsJsonArray().get(1).getAsInt());
+                        backgroundList.add((int) jsonObject.get("size").getAsJsonArray().get(0).getAsInt());
+                        backgroundList.add((int) jsonObject.get("size").getAsJsonArray().get(1).getAsInt());
                     } else {
-                        WelcomeScreenData.BACKGROUND_LIST.add(0);
-                        WelcomeScreenData.BACKGROUND_LIST.add(0);
+                        backgroundList.add(0);
+                        backgroundList.add(0);
                     }
-                    WelcomeScreenData.BACKGROUND_LIST.add((boolean) jsonObject.get("center").getAsBoolean());
-                    WelcomeScreenData.BACKGROUND_LIST.add((boolean) jsonObject.get("object_center").getAsBoolean());
+                    backgroundList.add((boolean) jsonObject.get("center").getAsBoolean());
+                    backgroundList.add((boolean) jsonObject.get("object_center").getAsBoolean());
                 }
                 for (int i = 0; i < WelcomeScreenMain.CONFIG.welcomeScreenBoxes + 1; i++) {
                     if (data.has("text_" + i)) {
@@ -79,7 +84,7 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
                         for (int u = 0; u < jsonTextArray.size(); u++) {
                             list.add(jsonTextArray.get(u).getAsString());
                         }
-                        WelcomeScreenData.TEXT_LIST.add(list);
+                        textList.add(list);
                     }
 
                     if (data.has("image_" + i)) {
@@ -100,7 +105,7 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
                         list.add(jsonObject.get("center").getAsBoolean());
                         list.add(jsonObject.get("object_center").getAsBoolean());
 
-                        WelcomeScreenData.IMAGE_LIST.add(list);
+                        imageList.add(list);
                     }
 
                     if (data.has("button_" + i)) {
@@ -122,7 +127,7 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
                         list.add(jsonObject.get("center").getAsBoolean());
                         list.add(jsonObject.get("object_center").getAsBoolean());
 
-                        WelcomeScreenData.BUTTON_LIST.add(list);
+                        buttonList.add(list);
                     }
 
                 }
@@ -130,10 +135,18 @@ public class WelcomeScreenLoader implements SimpleSynchronousResourceReloadListe
                 if (data.has("commands")) {
                     JsonArray jsonCommandArray = data.get("commands").getAsJsonArray();
                     for (int u = 0; u < jsonCommandArray.size(); u++) {
-                        WelcomeScreenData.COMMAND_LIST.add(jsonCommandArray.get(u).getAsString());
+                        commandList.add(jsonCommandArray.get(u).getAsString());
                     }
                 }
 
+                WelcomeScreenData.clearData();
+                WelcomeScreenData.TITLE_LIST.addAll(titleList);
+                WelcomeScreenData.CLOSE_LIST.addAll(closeList);
+                WelcomeScreenData.BACKGROUND_LIST.addAll(backgroundList);
+                WelcomeScreenData.TEXT_LIST.addAll(textList);
+                WelcomeScreenData.IMAGE_LIST.addAll(imageList);
+                WelcomeScreenData.BUTTON_LIST.addAll(buttonList);
+                WelcomeScreenData.COMMAND_LIST.addAll(commandList);
             } catch (Exception e) {
                 LOGGER.error("Error occurred while loading resource {}. {}", id.toString(), e.toString());
             }

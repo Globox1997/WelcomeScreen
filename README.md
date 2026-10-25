@@ -86,7 +86,7 @@ A full example can be found below:
     "background": {
         "center": false,
         "object_center": true,
-        "id": "minecraft:textures/gui/options_background.png",
+        "id": "minecraft:textures/block/dirt.png",
         "size": [
             0,
             0

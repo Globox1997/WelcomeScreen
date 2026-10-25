@@ -57,33 +57,30 @@ public class WelcomeScreen extends Screen {
         }).dimensions(closeButtonX, closeButtonY, 60, 20).build());
 
         for (int i = 0; i < this.buttonList.size(); i++) {
-            for (int u = 0; u < this.buttonList.get(i).size(); u++) {
+            int buttonX = (int) this.buttonList.get(i).get(0);
+            int buttonY = (int) this.buttonList.get(i).get(1);
+            int buttonSizeX = (int) this.buttonList.get(i).get(2);
+            int buttonSizeY = (int) this.buttonList.get(i).get(3);
+            boolean buttonCentered = (boolean) this.buttonList.get(i).get(6);
+            boolean buttonObjectCentered = (boolean) this.buttonList.get(i).get(7);
 
-                int buttonX = (int) this.buttonList.get(i).get(0);
-                int buttonY = (int) this.buttonList.get(i).get(1);
-                int buttonSizeX = (int) this.buttonList.get(i).get(2);
-                int buttonSizeY = (int) this.buttonList.get(i).get(3);
-                boolean buttonCentered = (boolean) this.buttonList.get(i).get(6);
-                boolean buttonObjectCentered = (boolean) this.buttonList.get(i).get(7);
-
-                if (buttonCentered) {
-                    buttonX = this.width / 2 + buttonX;
-                    buttonY = this.height / 2 + buttonY;
-                }
-                if (buttonObjectCentered) {
-                    buttonX = buttonX - buttonSizeX / 2;
-                    buttonY = buttonY - buttonSizeY / 2;
-                }
-                String link = (String) this.buttonList.get(i).get(5);
-                this.addDrawableChild(ButtonWidget.builder(Text.translatable((String) this.buttonList.get(i).get(4)), button -> {
-                    this.client.setScreen(new ConfirmLinkScreen(confirmed -> {
-                        if (confirmed) {
-                            Util.getOperatingSystem().open(link);
-                        }
-                        this.client.setScreen(this);
-                    }, link, true));
-                }).dimensions(buttonX, buttonY, buttonSizeX, buttonSizeY).build());
+            if (buttonCentered) {
+                buttonX = this.width / 2 + buttonX;
+                buttonY = this.height / 2 + buttonY;
             }
+            if (buttonObjectCentered) {
+                buttonX = buttonX - buttonSizeX / 2;
+                buttonY = buttonY - buttonSizeY / 2;
+            }
+            String link = (String) this.buttonList.get(i).get(5);
+            this.addDrawableChild(ButtonWidget.builder(Text.translatable((String) this.buttonList.get(i).get(4)), button -> {
+                this.client.setScreen(new ConfirmLinkScreen(confirmed -> {
+                    if (confirmed) {
+                        Util.getOperatingSystem().open(link);
+                    }
+                    this.client.setScreen(this);
+                }, link, true));
+            }).dimensions(buttonX, buttonY, buttonSizeX, buttonSizeY).build());
         }
     }
 
@@ -100,9 +97,12 @@ public class WelcomeScreen extends Screen {
         if (titleCentered) {
             titleX = this.width / 2 + titleX;
         }
-        context.getMatrices().translate(titleX, 0, 0.0f);
+        if (titleObjectCentered) {
+            titleX = titleX - this.textRenderer.getWidth(this.title);
+        }
+        context.getMatrices().translate(titleX, titleY, 0.0f);
         context.getMatrices().scale(2.0f, 2.0f, 2.0f);
-        context.drawText(textRenderer, this.title, (int) this.titleList.get(1) + (titleObjectCentered ? -this.textRenderer.getWidth(this.title) / 2 : 0), titleY, 0xFFFFFF, true);
+        context.drawText(textRenderer, this.title, 0, 0, 0xFFFFFF, true);
         context.getMatrices().pop();
 
         for (int i = 0; i < this.imageList.size(); i++) {
@@ -162,7 +162,7 @@ public class WelcomeScreen extends Screen {
                 backgroundWidth = (int) backgroundList.get(1);
                 backgroundHeight = (int) backgroundList.get(2);
                 boolean centered = (boolean) backgroundList.get(3);
-                boolean objectCentered = (boolean) backgroundList.get(3);
+                boolean objectCentered = (boolean) backgroundList.get(4);
                 backgroundTextureWidth = 256;
                 backgroundTextureHeight = 256;
 
@@ -177,12 +177,7 @@ public class WelcomeScreen extends Screen {
 
                 context.drawTexture((Identifier) backgroundList.get(0), backgroundX, backgroundY, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth, backgroundTextureHeight);
             } else {
-                for (int m = 0; m < this.width / 16; ++m) {
-                    for (int n = 0; n < this.height / 16; ++n) {
-                        context.drawTexture((Identifier) backgroundList.get(0), backgroundX + 16 * m, backgroundY + 16 * n, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth,
-                                backgroundTextureHeight);
-                    }
-                }
+                context.drawTexture((Identifier) backgroundList.get(0), backgroundX, backgroundY, 0.0f, 0.0f, backgroundWidth, backgroundHeight, backgroundTextureWidth, backgroundTextureHeight);
             }
 
             context.setShaderColor(1.0f, 1.0f, 1.0f, 1.0f);
