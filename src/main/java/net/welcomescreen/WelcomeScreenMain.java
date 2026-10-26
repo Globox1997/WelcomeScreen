@@ -5,8 +5,10 @@ import me.shedaniel.autoconfig.serializer.JanksonConfigSerializer;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.resource.ResourceType;
+import net.welcomescreen.command.CommandInit;
 import net.welcomescreen.config.WelcomeScreenConfig;
 import net.welcomescreen.data.WelcomeScreenLoader;
+import net.welcomescreen.data.WelcomeScreenManager;
 import net.welcomescreen.network.WelcomeServerPacket;
 
 public class WelcomeScreenMain implements ModInitializer {
@@ -17,6 +19,8 @@ public class WelcomeScreenMain implements ModInitializer {
     public void onInitialize() {
         ResourceManagerHelper.get(ResourceType.SERVER_DATA).registerReloadListener(new WelcomeScreenLoader());
         WelcomeServerPacket.init();
+        WelcomeScreenManager.init();
+        CommandInit.init();
         AutoConfig.register(WelcomeScreenConfig.class, JanksonConfigSerializer::new);
         CONFIG = AutoConfig.getConfigHolder(WelcomeScreenConfig.class).getConfig();
     }

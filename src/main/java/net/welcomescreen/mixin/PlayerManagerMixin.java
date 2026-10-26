@@ -28,7 +28,8 @@ import net.minecraft.world.World;
 import net.minecraft.world.WorldProperties;
 import net.welcomescreen.WelcomeScreenMain;
 import net.welcomescreen.data.WelcomeScreenCommands;
-import net.welcomescreen.data.WelcomeScreenData;
+import net.welcomescreen.data.WelcomeScreenManager;
+import net.welcomescreen.layout.WelcomeLayout;
 import net.welcomescreen.network.WelcomeServerPacket;
 
 @Mixin(PlayerManager.class)
@@ -46,9 +47,13 @@ public class PlayerManagerMixin {
     private void onPlayerConnectMixin(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData connectedClientData, CallbackInfo info, GameProfile gameProfile, UserCache userCache,
             String string, Optional<NbtCompound> optional, RegistryKey<World> registryKey, ServerWorld serverWorld, ServerWorld serverWorld2, String string2, WorldProperties worldProperties,
             ServerPlayNetworkHandler serverPlayNetworkHandler) {
-        this.runWelcomeCommands = optional.isEmpty() && !WelcomeScreenData.TITLE_LIST.isEmpty() && !WelcomeScreenData.COMMAND_LIST.isEmpty();
-        if ((optional.isEmpty() || WelcomeScreenMain.CONFIG.alwaysShowWelcomeScreen) && !WelcomeScreenData.TITLE_LIST.isEmpty()) {
-            WelcomeServerPacket.writeS2CWelcomeScreenPacket(player);
+        this.runWelcomeCommands = false;
+        Optional<WelcomeLayout> layout = WelcomeScreenManager.getActiveLayout();
+        if (layout.isPresent()) {
+            this.runWelcomeCommands = optional.isEmpty() && !layout.get().commands().isEmpty();
+            if (optional.isEmpty() || WelcomeScreenMain.CONFIG.alwaysShowWelcomeScreen) {
+                WelcomeServerPacket.sendWelcomeScreen(player, layout.get());
+            }
         }
     }
 
@@ -56,7 +61,7 @@ public class PlayerManagerMixin {
     private void onPlayerConnectTailMixin(ClientConnection connection, ServerPlayerEntity player, ConnectedClientData connectedClientData, CallbackInfo info) {
         if (this.runWelcomeCommands) {
             this.runWelcomeCommands = false;
-            WelcomeScreenCommands.runCommands(server, player);
+            WelcomeScreenManager.getActiveLayout().ifPresent(layout -> WelcomeScreenCommands.runCommands(server, player, layout.commands()));
         }
     }
 

@@ -10,7 +10,5 @@ public class WelcomeScreenConfig implements ConfigData {
 
     @Comment("Use for developing screen")
     public boolean alwaysShowWelcomeScreen = false;
-    @Comment("Used at the datapack loader")
-    public int welcomeScreenBoxes = 4;
 
 }

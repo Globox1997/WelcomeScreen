@@ -1,5 +1,7 @@
 package net.welcomescreen.data;
 
+import java.util.List;
+
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
@@ -13,8 +15,8 @@ public class WelcomeScreenCommands {
 
     private static final Logger LOGGER = LogManager.getLogger("WelcomeScreen");
 
-    public static void runCommands(MinecraftServer server, ServerPlayerEntity player) {
-        for (String command : WelcomeScreenData.COMMAND_LIST) {
+    public static void runCommands(MinecraftServer server, ServerPlayerEntity player, List<String> commands) {
+        for (String command : commands) {
             try {
                 server.getCommandManager().executeWithPrefix(new ServerCommandSource(createErrorOutput(command), player.getPos(), player.getRotationClient(), player.getServerWorld(), 2,
                         player.getName().getString(), player.getName(), server, player), command);
