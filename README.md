@@ -7,90 +7,68 @@ WelcomeScreen is a mod built for the [Fabric Loader](https://fabricmc.net/). It 
 ### License
 WelcomeScreen is licensed under MIT.
 
-### Datapacks
-WelcomeScreen requires a datapack to run.  
-If you don't know how to create a datapack check out [Data Pack Wiki](https://minecraft.fandom.com/wiki/Data_Pack)
-website and try to create your first one for the vanilla game.  
-If you know how to create one, the folder path has to be ```data\modid\welcomescreen\YOURFILE.json```  
-Welcome screen offers to set the ``title``, ``close button``, ``background``, ``commands`` (which are executed on opening the welcome screen) and multiple ``texts``, ``images`` and ``buttons``.  
-``texts``, ``images`` and ``buttons`` need `_1-4` at their description.  
-Images use pngs with the size 256x256 (or double it) and an uv of 0.  
-Buttons can use translateable keys. `center = true` will center the object to the middle of the screen, otherwise the top left corner is used for coordinate 0,0. `object_center = true` will center the object itself to its center (like the middle of a string as an example).
-The background uses 16x16 textures and fills the whole screen if size is set to 0. Otherwise it will use a 256x256 png.
+### Commands
+- `/welcomescreen edit` opens the editor with the current welcome screen.
+- `/welcomescreen show [targets]` shows the welcome screen to yourself or to the given players.
+- `/welcomescreen reset` removes the screen saved by the editor, so the datapack screen is used again.
 
-A full example can be found below:
+### Datapacks
+If you don't know how to create a datapack check out [Data Pack Wiki](https://minecraft.wiki/w/Data_pack).
+The file path has to be `data/<namespace>/welcomescreen/<name>.json`. If several files exist, the last one by name is used.
+
+A full example:
 ```json
 {
-    "title": {
-        "center": true,
-        "object_center": true,
-        "pos": [
-            0,
-            8
-        ],
-        "text": "This is the Title"
+    "background": {
+        "texture": "minecraft:textures/block/dirt.png"
     },
-    "close": {
-        "center": true,
-        "object_center": true,
-        "pos": [
-            0,
-            50
-        ],
-        "text": "screen.welcomescreen.close"
-    },
-    "text_1": {
-        "center": true,
-        "object_center": true,
-        "pos": [
-            0,
-            -40
-        ],
-        "text": [
-            "FIrst line XXXXXXXXXXXXXXXXXXXXXX",
-            "jo second line",
-            "Another line lul",
-            "okay"
-        ]
-    },
-    "image_1": {
-        "center": true,
-        "object_center": true,
-        "pos": [
-            60,
-            0
-        ],
-        "size": [
-            28,
-            29
-        ],
-        "id": "minecraft:textures/gui/advancements/tabs.png"
-    },
-    "button_1": {
-        "center": true,
-        "object_center": true,
-        "pos": [
-            0,
-            10
-        ],
-        "size": [
-            50,
-            20
-        ],
-        "text": "Wiki",
-        "link": "https://globox1997.github.io/wiki/"
-    },
+    "elements": [
+        {
+            "type": "text",
+            "anchor": "top_center",
+            "pivot": "top_center",
+            "y": 10,
+            "lines": [ { "text": "This is the Title", "color": "gold" } ],
+            "scale": 2.0,
+            "shadow": true
+        },
+        {
+            "type": "text",
+            "anchor": "center",
+            "pivot": "center",
+            "y": -40,
+            "lines": [ "First line", "Second line" ]
+        },
+        {
+            "type": "image",
+            "anchor": "center",
+            "pivot": "center",
+            "x": 80,
+            "texture": "minecraft:textures/misc/unknown_pack.png",
+            "width": 32,
+            "height": 32
+        },
+        {
+            "type": "button",
+            "anchor": "center",
+            "pivot": "center",
+            "y": 20,
+            "label": "Wiki",
+            "width": 50,
+            "action": "open_url",
+            "url": "https://globox1997.github.io/wiki/"
+        },
+        {
+            "type": "button",
+            "anchor": "bottom_center",
+            "pivot": "bottom_center",
+            "y": -10,
+            "label": { "translate": "screen.welcomescreen.close" },
+            "action": "close"
+        }
+    ],
     "commands": [
         "give @s minecraft:stick"
-    ],
-    "background": {
-        "center": false,
-        "object_center": true,
-        "id": "minecraft:textures/block/dirt.png",
-        "size": [
-            0,
-            0
-        ]
-    }
+    ]
 }
 ```
