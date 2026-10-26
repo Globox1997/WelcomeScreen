@@ -1,6 +1,6 @@
 ### Added:
-- 
+- Ingame editor
 ### Fixed:
 - 
 ### Changed:
-- Updated to mc 1.21.1
+- Tweaked datapack
