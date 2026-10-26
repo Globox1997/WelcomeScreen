@@ -959,7 +959,7 @@ public class WelcomeEditorScreen extends Screen {
         if (text.getContent() instanceof TranslatableTextContent translatable && text.getSiblings().isEmpty() && translatable.getArgs().length == 0) {
             return translatable.getKey();
         }
-        return text.getString();
+        return FormattingCodes.toCodes(text);
     }
 
     private static Text fromEditString(String value, @Nullable Text previous) {
@@ -969,7 +969,7 @@ public class WelcomeEditorScreen extends Screen {
         if (Language.getInstance().hasTranslation(value)) {
             return Text.translatable(value);
         }
-        return Text.literal(value);
+        return FormattingCodes.parse(value);
     }
 
     private static List<Text> toLines(String value, List<Text> previousLines) {
