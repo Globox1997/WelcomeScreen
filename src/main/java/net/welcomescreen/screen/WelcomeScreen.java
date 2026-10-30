@@ -5,6 +5,7 @@ import net.fabricmc.api.Environment;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmLinkScreen;
 import net.minecraft.client.gui.screen.Screen;
+import net.minecraft.client.gui.widget.ButtonWidget;
 import net.minecraft.text.Text;
 import net.welcomescreen.layout.ButtonAction;
 import net.welcomescreen.layout.ButtonElement;
@@ -27,7 +28,10 @@ public class WelcomeScreen extends Screen {
         for (WelcomeElement element : this.layout.elements()) {
             if (element instanceof ButtonElement button) {
                 WelcomeLayoutRenderer.Bounds bounds = WelcomeLayoutRenderer.getBounds(button, this.textRenderer, this.width, this.height);
-                this.addDrawableChild(WelcomeLayoutRenderer.createButton(button, bounds, widget -> this.onButtonPressed(button)));
+                ButtonWidget widget = this.addDrawableChild(WelcomeLayoutRenderer.createButton(button, bounds, pressed -> this.onButtonPressed(button)));
+                if (button.action() == ButtonAction.OPEN_URL && ButtonElement.parseUrl(button.url()).isEmpty()) {
+                    widget.active = false;
+                }
             }
         }
     }
@@ -51,7 +55,7 @@ public class WelcomeScreen extends Screen {
 
     private void onButtonPressed(ButtonElement button) {
         if (button.action() == ButtonAction.OPEN_URL) {
-            ConfirmLinkScreen.open(this, button.url(), true);
+            ButtonElement.parseUrl(button.url()).ifPresent(uri -> ConfirmLinkScreen.open(this, uri, false));
         } else {
             this.close();
         }

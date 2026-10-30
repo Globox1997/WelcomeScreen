@@ -1,5 +1,9 @@
 package net.welcomescreen.layout;
 
+import java.net.URI;
+import java.net.URISyntaxException;
+import java.util.Optional;
+
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.MapCodec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
@@ -38,5 +42,16 @@ public record ButtonElement(Placement placement, Text label, int width, int heig
 
     public ButtonElement withUrl(String url) {
         return new ButtonElement(this.placement, this.label, this.width, this.height, this.action, url);
+    }
+
+    public static Optional<URI> parseUrl(String url) {
+        try {
+            URI uri = new URI(url.trim());
+            if ("https".equalsIgnoreCase(uri.getScheme()) && uri.getHost() != null) {
+                return Optional.of(uri);
+            }
+        } catch (URISyntaxException exception) {
+        }
+        return Optional.empty();
     }
 }

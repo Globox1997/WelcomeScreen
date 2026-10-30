@@ -28,6 +28,7 @@ import io.netty.buffer.Unpooled;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
+import net.minecraft.client.MinecraftClient;
 import net.minecraft.client.gui.DrawContext;
 import net.minecraft.client.gui.screen.ConfirmScreen;
 import net.minecraft.client.gui.screen.Screen;
@@ -54,6 +55,7 @@ import net.welcomescreen.layout.WelcomeBackground;
 import net.welcomescreen.layout.WelcomeElement;
 import net.welcomescreen.layout.WelcomeLayout;
 import net.welcomescreen.network.packet.SaveLayoutPacket;
+import net.welcomescreen.network.packet.SaveResultPacket;
 import net.welcomescreen.screen.WelcomeLayoutRenderer;
 import net.welcomescreen.screen.WelcomeLayoutRenderer.Bounds;
 
@@ -92,6 +94,8 @@ public class WelcomeEditorScreen extends Screen {
     }
 
     private WelcomeLayout layout;
+    @Nullable
+    private WelcomeLayout pendingSaveLayout;
     private final Deque<WelcomeLayout> undoStack = new ArrayDeque<>();
     private final Deque<WelcomeLayout> redoStack = new ArrayDeque<>();
     private final Map<Identifier, Boolean> textureCache = new HashMap<>();
@@ -308,10 +312,13 @@ public class WelcomeEditorScreen extends Screen {
         this.addCyclingButton(x, y, fieldWidth, "action", ButtonAction.values(), button.action(), ButtonAction::getDisplayName,
                 action -> this.editSelected("action", selected -> ((ButtonElement) selected).withAction(action)));
         y += ROW_HEIGHT;
-        this.addTextField(x, y, fieldWidth, "url", button.url(), value -> {
+        TextFieldWidget urlField = this.addTextField(x, y, fieldWidth, "url", button.url(), value -> {
             this.editSelected("url", selected -> ((ButtonElement) selected).withUrl(value.trim()));
-            return true;
+            return value.isBlank() || ButtonElement.parseUrl(value).isPresent();
         });
+        if (!button.url().isBlank() && ButtonElement.parseUrl(button.url()).isEmpty()) {
+            urlField.setEditableColor(INVALID_TEXT_COLOR);
+        }
     }
 
     private void initSettingsPanel(int x, int y, int fieldWidth, int halfWidth) {
@@ -869,7 +876,7 @@ public class WelcomeEditorScreen extends Screen {
             WelcomeLayout.PACKET_CODEC.encode(buf, this.layout);
             size = buf.readableBytes();
         } catch (Exception exception) {
-            this.showToast("save_failed");
+            this.showToast("encode_failed");
             return;
         } finally {
             buf.release();
@@ -878,9 +885,25 @@ public class WelcomeEditorScreen extends Screen {
             this.showToast("save_too_large");
             return;
         }
+        this.pendingSaveLayout = this.layout;
         ClientPlayNetworking.send(new SaveLayoutPacket(this.layout));
-        this.dirty = false;
-        this.showToast("saved");
+    }
+
+    public void onSaveResult(SaveResultPacket.Result result) {
+        if (result == SaveResultPacket.Result.SUCCESS && this.layout == this.pendingSaveLayout) {
+            this.dirty = false;
+        }
+        this.pendingSaveLayout = null;
+        showSaveResultToast(this.client, result);
+    }
+
+    public static void showSaveResultToast(MinecraftClient client, SaveResultPacket.Result result) {
+        String key = switch (result) {
+        case SUCCESS -> "saved";
+        case NO_PERMISSION -> "save_no_permission";
+        case FAILED -> "save_failed";
+        };
+        SystemToast.show(client.getToastManager(), SystemToast.Type.PERIODIC_NOTIFICATION, Text.translatable(TRANSLATION_PREFIX + "toast." + key), null);
     }
 
     private void copyJson() {

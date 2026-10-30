@@ -1,6 +1,7 @@
 ### Added:
-- Ingame editor
+- 
 ### Fixed:
 - 
 ### Changed:
-- Tweaked datapack
+- links check
+- saving check
